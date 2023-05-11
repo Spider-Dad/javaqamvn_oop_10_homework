@@ -3,184 +3,122 @@ package ru.netology.javaqa.radio;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class RadioTest { // объявление публичного тест класса 'RadioTest'
+public class RadioTest {
 
-    // 1. положительный тест, проверяет установку текущей радиостанции на определенный номер
+    Radio radio = new Radio();
+
     @Test
-    public void shouldSetCurrentStation() {
-        Radio radio = new Radio();
-
-        radio.setCurrentNumberStation(5);
-
-        int expected = 5;
-        int actual = radio.getCurrentNumberStation();
-
-        Assertions.assertEquals(expected, actual);
-
+    public void testConstructorWithoutParameter() {
+        Assertions.assertEquals(10, radio.getNumStations());
+        Assertions.assertEquals(0, radio.getCurrentStation());
+        Assertions.assertEquals(0, radio.getVolume());
     }
 
-    // 2. положительный тест, проверяет увеличение громкости на единицу.
     @Test
-    public void shouldIncreaseVolume() {
-        Radio radio = new Radio();
-
-        radio.increaseVolumeStation();
-
-        int expected = 1;
-        int actual = radio.getCurrentVolumeStation();
-
-        Assertions.assertEquals(expected, actual);
-
+    public void testConstructorWithParameter() {
+        Radio customRadio = new Radio(20);
+        Assertions.assertEquals(20, customRadio.getNumStations());
+        Assertions.assertEquals(0, customRadio.getCurrentStation());
+        Assertions.assertEquals(0, customRadio.getVolume());
     }
 
-    // 3. отрицательный тест, проверяет, что нельзя установить громкость больше 100.
     @Test
-    public void shouldNotSetVolumeMoreThanHundred() {
-        Radio radio = new Radio();
-
-        radio.setCurrentVolumeStation(101);
-
-        int expected = 0;
-        int actual = radio.getCurrentVolumeStation();
-
-        Assertions.assertEquals(expected, actual);
+    public void testGetNumStations() {
+        Assertions.assertEquals(10, radio.getNumStations());
     }
 
-    // 4. положительный тест, проверяет уменьшение громкости на единицу.
     @Test
-    public void shouldDecreaseVolume() {
-        Radio radio = new Radio();
-
-        radio.setCurrentVolumeStation(50);
-        radio.decreaseVolumeStation();
-
-        int expected = 49;
-        int actual = radio.getCurrentVolumeStation();
-
-        Assertions.assertEquals(expected, actual);
+    public void testGetCurrentStation() {
+        Assertions.assertEquals(0, radio.getCurrentStation());
     }
 
-    // 5. положительный тест, проверяет переключение на следующую радиостанцию.
     @Test
-    public void shouldSwitchNextNumberStation() {
-        Radio radio = new Radio();
+    public void testSetCurrentStation_ValidStation() {
+        radio.setCurrentStation(5);
+        Assertions.assertEquals(5, radio.getCurrentStation());
+    }
 
-        radio.setCurrentNumberStation(8);
+    @Test
+    public void testSetCurrentStation_InvalidStation() {
+        radio.setCurrentStation(15);
+        Assertions.assertEquals(0, radio.getCurrentStation());
+        radio.setCurrentStation(-5);
+        Assertions.assertEquals(0, radio.getCurrentStation());
+    }
+
+    @Test
+    public void testGetVolume() {
+        Assertions.assertEquals(0, radio.getVolume());
+    }
+
+    @Test
+    public void testSetCurrentVolume_ValidVolume() {
+        radio.setCurrentVolume(50);
+        Assertions.assertEquals(50, radio.getVolume());
+    }
+
+    @Test
+    public void testSetCurrentVolume_InvalidVolume() {
+        radio.setCurrentVolume(120);
+        Assertions.assertEquals(0, radio.getVolume());
+        radio.setCurrentVolume(-10);
+        Assertions.assertEquals(0, radio.getVolume());
+    }
+
+    @Test
+    public void testSetStation_ValidStation() {
+        radio.setStation(7);
+        Assertions.assertEquals(7, radio.getCurrentStation());
+    }
+
+    @Test
+    public void testSetStation_InvalidStation() {
+        radio.setStation(15);
+        Assertions.assertEquals(0, radio.getCurrentStation());
+        radio.setStation(-5);
+        Assertions.assertEquals(0, radio.getCurrentStation());
+    }
+
+    @Test
+    public void testNextStation() {
+        radio.setStation(8);
         radio.nextStation();
-
-        int expected = 9;
-        int actual = radio.getCurrentNumberStation();
-
-        Assertions.assertEquals(expected, actual);
-    }
-
-    // 6. положительный тест, проверяет переключение на предыдущую радиостанцию.
-    @Test
-    public void shouldSwitchPrevNumberStation() {
-        Radio radio = new Radio();
-
-        radio.setCurrentNumberStation(5);
-        radio.prevStation();
-
-        int expected = 4;
-        int actual = radio.getCurrentNumberStation();
-
-        Assertions.assertEquals(expected, actual);
-    }
-
-    // 7. положительный тест, проверяет переключение с последней радиостанции на первую.
-    @Test
-    public void shouldSwitchToFirstNumberStationThanOnLastNumberStation() {
-        Radio radio = new Radio();
-
-        radio.setCurrentNumberStation(9);
+        Assertions.assertEquals(9, radio.getCurrentStation());
         radio.nextStation();
-
-        int expected = 0;
-        int actual = radio.getCurrentNumberStation();
-
-        Assertions.assertEquals(expected, actual);
-
+        Assertions.assertEquals(0, radio.getCurrentStation());
     }
 
-    // 8. положительный тест, проверяет переключение с первой радиостанции на последнюю.
     @Test
-    public void shouldSwitchToLastNumberStationWhenOnFirstNumberStation() {
-        Radio radio = new Radio();
-
-        radio.setCurrentNumberStation(0);
+    public void testPrevStation() {
+        radio.setStation(1);
         radio.prevStation();
-
-        int expected = 9;
-        int actual = radio.getCurrentNumberStation();
-
-        Assertions.assertEquals(expected, actual);
+        Assertions.assertEquals(0, radio.getCurrentStation());
+        radio.prevStation();
+        Assertions.assertEquals(9, radio.getCurrentStation());
     }
 
-    // 9. отрицательный тест, проверяет, что нельзя установить текущую радиостанцию с номером меньше нуля.
     @Test
-    public void shouldNotSetCurrentStationLessThanZero() {
-        Radio radio = new Radio();
-
-        radio.setCurrentNumberStation(-1);
-
-        int expected = 0;
-        int actual = radio.getCurrentNumberStation();
-
-        Assertions.assertEquals(expected, actual);
-
+    public void testIncreaseVolume() {
+        radio.increaseVolume();
+        Assertions.assertEquals(1, radio.getVolume());
+        radio.setCurrentVolume(99);
+        radio.increaseVolume();
+        Assertions.assertEquals(100, radio.getVolume());
+        radio.increaseVolume();
+        Assertions.assertEquals(100, radio.getVolume());
     }
 
-    // 10.  отрицательный тест, проверяет, что нельзя установить текущую радиостанцию с номером больше 9.
     @Test
-    public void shouldNotCurrentStationMoreThanNine() {
-        Radio radio = new Radio();
-
-        radio.setCurrentNumberStation(10);
-
-        int expected = 0;
-        int actual = radio.getCurrentNumberStation();
-
-        Assertions.assertEquals(expected, actual);
+    public void testDecreaseVolume() {
+        radio.decreaseVolume();
+        Assertions.assertEquals(0, radio.getVolume());
+        radio.setCurrentVolume(50);
+        radio.decreaseVolume();
+        Assertions.assertEquals(49, radio.getVolume());
+        radio.decreaseVolume();
+        Assertions.assertEquals(48, radio.getVolume());
+        radio.setCurrentVolume(0);
+        radio.decreaseVolume();
+        Assertions.assertEquals(0, radio.getVolume());
     }
-
-    // 11. отрицательный тест, проверяет, что нельзя увеличить громкость больше 100.
-    @Test
-    public void shouldNotIncreaseVolumeMoreThanHundred() {
-        Radio radio = new Radio();
-
-        radio.setCurrentVolumeStation(100);
-        radio.increaseVolumeStation();
-
-        int expected = 100;
-        int actual = radio.getCurrentVolumeStation();
-
-        Assertions.assertEquals(expected, actual);
-    }
-
-    // 12. отрицательный тест, проверяет, что нельзя установить громкость меньше нуля.
-    @Test
-    public void shouldNotSetVolumeLessThanZero() {
-        Radio radio = new Radio();
-
-        radio.setCurrentVolumeStation(-1);
-
-        int expected = 0;
-        int actual = radio.getCurrentVolumeStation();
-
-        Assertions.assertEquals(expected, actual);
-    }
-
-    // 13. отрицательный тест, проверяет, что нельзя уменьшить громкость меньше нуля.
-    @Test
-    public void shouldNotDecreaseVolumeLessThanZero() {
-        Radio radio = new Radio();
-
-        radio.decreaseVolumeStation();
-
-        int expected = 0;
-        int actual = radio.getCurrentVolumeStation();
-
-        Assertions.assertEquals(expected, actual);
-    }
-} // конец объявления класса 'RadioTest'
+}
